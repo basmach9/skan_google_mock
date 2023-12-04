@@ -6,6 +6,10 @@ from models import GoogleTokensModel
 
 def google_tokens_post(body_data):
     try:
+        existing = GoogleTokensModel.query.filter_by(**body_data).first()
+        if existing:
+            db.session.delete(existing)
+
         data = GoogleTokensModel(**body_data)
         db.session.add(data)
         db.session.commit()
