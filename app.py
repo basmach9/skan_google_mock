@@ -1,9 +1,12 @@
 from flask import Flask
 from flask_smorest import Api
 from flask_migrate import Migrate
+from routes.blueprints import *
+from db import db
 from routes.google_config import blp as google_config_bl
 from routes.google_tokens import blp as google_tokens_bl
-from db import db
+from routes.oauth2 import blp as oauth2_bl
+from routes.customers import blp as customers_bl
 
 
 def create_app():
@@ -23,7 +26,8 @@ def create_app():
     migrate = Migrate(app, db)
 
     api = Api(app)
-    api.register_blueprint(google_config_bl)
-    api.register_blueprint(google_tokens_bl)
+    api.register_blueprint(skan_blp)
+    api.register_blueprint(google_config_blp)
+    api.register_blueprint(token_mapping_blp)
 
     return app
