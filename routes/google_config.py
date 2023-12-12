@@ -1,14 +1,14 @@
 from flask.views import MethodView
-from routes.blueprints import google_config_blp as blp
+from flask_smorest import Blueprint
 from schemas import *
 from controllers.google_config import *
 
 
+blp = Blueprint('google data', __name__, description='Google DATA related controllers')
+
+
 @blp.route("/google_data/data")
 class GoogleConfig(MethodView):
-    @blp.arguments(GoogleConfigSchemaGet)
-    def get(self, body_data):
-        return google_config_get(body_data)
 
     @blp.arguments(GoogleConfigSchemaPost)
     def post(self, body_data):
@@ -21,3 +21,8 @@ class GoogleConfig(MethodView):
     @blp.arguments(GoogleConfigSchemaDelete)
     def delete(self, body_data):
         return google_config_delete(body_data)
+    
+@blp.route("/google_data/data/<s>")
+class GoogleConfigParams(MethodView):
+    def get(self, s):
+        return google_config_get(s)

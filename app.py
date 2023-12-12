@@ -1,12 +1,10 @@
 from flask import Flask
 from flask_smorest import Api
 from flask_migrate import Migrate
-from routes.blueprints import *
-from db import db
 from routes.google_config import blp as google_config_bl
 from routes.google_tokens import blp as google_tokens_bl
-from routes.oauth2 import blp as oauth2_bl
-from routes.customers import blp as customers_bl
+from routes.google_leads import blp as google_leads_bl
+from db import db
 
 
 def create_app():
@@ -19,15 +17,15 @@ def create_app():
     app.config["OPENAPI_URL_PREFIX"] = "/"
     app.config["OPENAPI_SWAGGER_UI_PATH"] = "/"
     app.config["OPENAPI_SWAGGER_UI_URL"] = "https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.10.0/"
-    app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://localhost:5432/skan_google_mock"
+    app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://localhost:5433/apps_db_3"
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     db.init_app(app)
     migrate = Migrate(app, db)
 
     api = Api(app)
-    api.register_blueprint(skan_blp)
-    api.register_blueprint(google_config_blp)
-    api.register_blueprint(token_mapping_blp)
+    api.register_blueprint(google_leads_bl)
+    api.register_blueprint(google_config_bl)
+    api.register_blueprint(google_tokens_bl)
 
     return app
