@@ -6,18 +6,25 @@ from models import GoogleConfigModel, GoogleTokensModel
 
 
 def google_leads_get_customer_client(req_data, version, id):
+    """
+    :param req_data:
+    :param version:
+    :param id: id can be customer is or customer client id
+    :return: response according to given input
+     """
     if not version == '15':
         abort(400, message="wrong version")
-    token_data = GoogleTokensModel.query.filter_by(access_token = req_data['Authorization'].split(" ")[1]).first()
+    token_data = GoogleTokensModel.query.filter_by(access_token=req_data['Authorization'].split(" ")[1]).first()
     if "Login-Customer-Id" in list(req_data.keys()):
-        fix_path =  "{}.{}.{}.{}".format(token_data.app_id, token_data.network_user_id ,req_data['Login-Customer-Id'], id)
+        fix_path = "{}.{}.{}.{}".format(token_data.app_id, token_data.network_user_id, req_data['Login-Customer-Id'],
+                                        id)
     else:
-        fix_path = "{}.{}.{}".format(token_data.app_id, token_data.network_user_id, id)    
+        fix_path = "{}.{}.{}".format(token_data.app_id, token_data.network_user_id, id)
 
-    # print(req_data)
+        # print(req_data)
     # print(fix_path)
     data = GoogleConfigModel.query.filter_by(google_path=fix_path).all()
-    
+
     if "Login-Customer-Id" in list(req_data.keys()):
 
         results = []
@@ -40,30 +47,30 @@ def google_leads_get_customer_client(req_data, version, id):
             if type(campaign_data_dict) == dict:
                 dict_all_params |= campaign_data_dict
 
-            final_data = {"segments":{
+            final_data = {"segments": {
                 "skAdNetworkAttributionCredit": dict_all_params['skAdNetworkAttributionCredit'],
                 "skAdNetworkAdEventType": dict_all_params['skAdNetworkAdEventType'],
                 "skAdNetworkPostbackSequenceIndex": dict_all_params['skAdNetworkPostbackSequenceIndex'],
                 "skAdNetworkSourceType": dict_all_params['skAdNetworkSourceType'],
                 "skAdNetworkUserType": dict_all_params['skAdNetworkUserType']
+            },
+                "campaign": {
+                    "appCampaignSetting": {"appId": token_data.app_id},
+                    "name": dict_all_params["name"],
+                    "resourceName": f"customers/{id}/campaigns/{json.loads(item.value)}",
+                    "id": json.loads(item.value)
                 },
-                    "campaign":{
-                        "appCampaignSetting":{"appId": token_data.app_id},
-                        "name":dict_all_params["name"],
-                        "resourceName":f"customers/{id}/campaigns/{json.loads(item.value)}",
-                        "id": json.loads(item.value)
-                        },
-                    "metrics":{
-                        "skAdNetworkTotalConversions": dict_all_params['skAdNetworkTotalConversions'],
-                        "skAdNetworkInstalls": dict_all_params['skAdNetworkInstalls']
-                    }
-                    }
+                "metrics": {
+                    "skAdNetworkTotalConversions": dict_all_params['skAdNetworkTotalConversions'],
+                    "skAdNetworkInstalls": dict_all_params['skAdNetworkInstalls']
+                }
+            }
             results.append(final_data)
-        return_data = {'results':results}
-        
-        
+        return_data = {'results': results}
+
+
     else:
-        return_data = [{"customerClient":{
+        return_data = [{"customerClient": {
             "clientCustomer": f"customers/{id}",
             "resourceName": f"customers/{id}/customerClients/{json.loads(item.value)}"
         }} for item in data]

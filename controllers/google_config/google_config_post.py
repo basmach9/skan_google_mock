@@ -7,7 +7,13 @@ import json
 
 
 def google_config_post(body_data):
-    init_dict = {"app_id": "", "network_user_id": None, "customer_id": None, "customer_client":None, "campaign_id":None}
+    """
+        method is responsible to add input bucket data to db
+        the assumption is that we need to build path according to given values when only adp_id is mandatory
+        for example if we got only app_id and customer_id will be app_id.customer_id and value is customer_id
+    """
+    init_dict = {"app_id": "", "network_user_id": None, "customer_id": None, "customer_client": None,
+                 "campaign_id": None}
     init_dict |= body_data
     dict_values = list(init_dict.values())
     id_paths = dict_values[:5]
@@ -18,7 +24,7 @@ def google_config_post(body_data):
             break
         fix = '.'.join(id_paths[:length])
         fix_path.append(fix)
-        length += 1        
+        length += 1
     index = 1
     config_models = []
     for item in fix_path:

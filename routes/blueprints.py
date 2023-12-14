@@ -1,4 +1,7 @@
 from flask_smorest import Blueprint
+""" 
+swagger section
+"""
 
 
 skan_blp = Blueprint('skan', __name__, description='skan related controllers')
