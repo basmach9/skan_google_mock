@@ -10,4 +10,3 @@ class GoogleTokensModel(db.Model):
     network_user_id = db.Column(db.String, nullable=False)
     access_token = db.Column(db.String, nullable=False)
     last_update = db.Column(db.DateTime(timezone=True), onupdate=func.now())
-    

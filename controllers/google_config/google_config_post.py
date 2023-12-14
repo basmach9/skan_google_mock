@@ -7,7 +7,13 @@ import json
 
 
 def google_config_post(body_data):
-    init_dict = {"app_id": "", "network_user_id": None, "customer_id": None, "customer_client": None, "bucket_id": None}
+    """
+        method is responsible to add input bucket data to db
+        the assumption is that we need to build path according to given values when only adp_id is mandatory
+        for example if we got only app_id and customer_id will be app_id.customer_id and value is customer_id
+    """
+    init_dict = {"app_id": "", "network_user_id": None, "customer_id": None, "customer_client": None,
+                 "campaign_id": None}
     init_dict |= body_data
     dict_values = list(init_dict.values())
     id_paths = dict_values[:5]
@@ -38,6 +44,7 @@ def google_config_post(body_data):
                 data = {"google_path": item, "value": json.dumps(init_dict)}
                 for item in db_data:
                     db.session.delete(item)
+
                 config_model = GoogleConfigModel(**data)
                 config_models.append(config_model)
             else:
@@ -47,10 +54,12 @@ def google_config_post(body_data):
                         db.session.delete(item)
                 config_model = GoogleConfigModel(**data)
                 config_models.append(config_model)
+
     try:
         for model in config_models:
             db.session.add(model)
         db.session.commit()
     except SQLAlchemyError:
         abort(500, message="error while insert config data")
+
     return body_data

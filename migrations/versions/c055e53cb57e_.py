@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: f72113176e81
+Revision ID: c055e53cb57e
 Revises: 
-Create Date: 2023-11-28 00:40:05.446241
+Create Date: 2023-12-05 11:58:43.767598
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'f72113176e81'
+revision = 'c055e53cb57e'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -35,8 +35,9 @@ def upgrade():
     )
     op.create_table('skan_mock_google_tokens',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('access_token', sa.String(), nullable=False),
     sa.Column('app_id', sa.String(), nullable=False),
+    sa.Column('network_user_id', sa.String(), nullable=False),
+    sa.Column('access_token', sa.String(), nullable=False),
     sa.Column('last_update', sa.DateTime(timezone=True), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
