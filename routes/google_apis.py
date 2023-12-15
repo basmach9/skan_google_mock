@@ -1,7 +1,7 @@
 from flask.views import MethodView
 from flask_smorest import Blueprint
 from schemas import *
-from controllers.google_leads import *
+from controllers.google_apis import *
 from flask import request
 from schemas import Oauth2SchemaPost
 

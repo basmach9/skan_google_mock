@@ -16,7 +16,7 @@ token mapping(get/post) routes
 class GoogleToken(MethodView):
     def get(self):
         """
-        get tokens according to input(none get all tokens/app_id get all related tokens...)
+        get tokens according to input (none - get all tokens / app_id - get all related tokens...)
         """
         params_data = dict(request.args)
         return google_tokens_get(params_data)
