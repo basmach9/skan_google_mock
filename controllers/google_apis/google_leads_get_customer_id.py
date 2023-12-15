@@ -13,6 +13,7 @@ def google_leads_get_customer_id(req_data, version):
     :param version:
     :return:
     """
+    # check if version is not 15
     if not version == '15':
         abort(400, message="wrong version")
     token_data = GoogleTokensModel.query.filter_by(access_token=req_data['Authorization'].split(" ")[1]).first()

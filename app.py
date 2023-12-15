@@ -3,7 +3,7 @@ from flask_smorest import Api
 from flask_migrate import Migrate
 from routes.google_config import blp as google_config_bl
 from routes.google_tokens import blp as google_tokens_bl
-from routes.google_leads import blp as google_leads_bl
+from routes.google_apis import blp as google_leads_bl
 from db import db
 
 
@@ -34,7 +34,7 @@ def create_app():
 
     api = Api(app)
     api.register_blueprint(google_leads_bl)
-    api.register_blueprint(google_config_bl)
     api.register_blueprint(google_tokens_bl)
+    api.register_blueprint(google_config_bl)
 
     return app
